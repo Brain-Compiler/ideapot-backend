@@ -47,12 +47,16 @@ public class IdeaController {
         ideaDto.setId(1L);
         ideaDto.setUserId(1L);
         ideaDto.setTitle("아이디어 안팝니다");
-        ideaDto.setDescription("노뭏현는 짱이다");
+        ideaDto.setDescription("박대형이니는는 짱이다");
         ideaDto.setPrice(100);
         return ideaService.editIdea(ideaDto, files);
     }
 
     // DELETE
+    @DeleteMapping("/{id}")
+    public ErrorDto deleteIdea(@PathVariable Long id) {
+        return ideaService.deleteIdea(id);
+    }
 
     // ELSE
 

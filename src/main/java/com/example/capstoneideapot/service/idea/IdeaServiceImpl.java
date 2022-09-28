@@ -75,6 +75,19 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     @Override
+    public ErrorDto deleteIdea(Long id) {
+        Idea idea = ideaRepository.findById(id).orElse(null);
+
+        if (idea != null) {
+            ErrorDto error = deleteIdeaFiles(idea);
+            ideaRepository.delete(idea);
+            return error;
+        } else {
+            return new ErrorDto("게시글이 존재하지 않음");
+        }
+    }
+
+    @Override
     public ErrorDto deleteIdeaFiles(Idea idea) {
         ErrorDto error = new ErrorDto("없음");
         Set<Files> ideaFiles = idea.getFiles();

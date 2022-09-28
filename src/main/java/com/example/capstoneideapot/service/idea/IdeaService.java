@@ -24,7 +24,9 @@ public interface IdeaService {
     // PUT
     ErrorDto editIdea(@RequestBody IdeaDto ideaDto, List<MultipartFile> files) throws IOException;
 
-    // DELETe
+    // DELETE
+    ErrorDto deleteIdea(Long id);
+
     ErrorDto deleteIdeaFiles(Idea idea);
 
     // ELSE
