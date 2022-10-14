@@ -44,7 +44,7 @@ public class UserController {
         return userService.findPasswordCheckAuthCode(findUserPasswordDto);
     }
 
-    @GetMapping("/email-authentication/check-code")
+    @PostMapping("/email-authentication/check-code")
     public ErrorDto emailAuthCheckCode(@RequestBody EmailAuthenticationCheckDto emailAuthCheckDto) {
         return userService.emailAuthCheckCode(emailAuthCheckDto);
     }
