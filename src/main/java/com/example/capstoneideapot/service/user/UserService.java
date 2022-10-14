@@ -23,6 +23,8 @@ public interface UserService {
 
     ErrorDto findPasswordCheckAuthCode(FindUserPasswordDto findUserPasswordDto);
 
+    ErrorDto emailAuthCheckCode(EmailAuthenticationCheckDto emailAuthCehckDto);
+
     // POST
     void saveUser(SignUpDto signUpDto, MultipartFile profile) throws IOException;
 

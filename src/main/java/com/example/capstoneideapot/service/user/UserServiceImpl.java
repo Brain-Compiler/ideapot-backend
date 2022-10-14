@@ -1,5 +1,6 @@
 package com.example.capstoneideapot.service.user;
 
+import com.example.capstoneideapot.entity.AuthToken;
 import com.example.capstoneideapot.entity.Role;
 import com.example.capstoneideapot.entity.User;
 import com.example.capstoneideapot.entity.dto.ErrorDto;
@@ -96,6 +97,18 @@ public class UserServiceImpl implements UserService {
         return error;
     }
 
+    @Override
+    public ErrorDto emailAuthCheckCode(EmailAuthenticationCheckDto emailAuthCheckDto) {
+        ErrorDto error = new ErrorDto("없음");
+        String email = emailAuthCheckDto.getEmail();
+        String code = emailAuthCheckDto.getCode();
+
+        if (!authTokenService.checkAuthCode(email, code)) {
+            error.setError("인증코드 불일치 또는 만료");
+        }
+        return error;
+    }
+
     // POST
     @Override  // 다시 짜 대형
     public void saveUser(SignUpDto signUpDto, MultipartFile profile) throws IOException {
@@ -173,12 +186,7 @@ public class UserServiceImpl implements UserService {
             // 이미 가입되어 있는 아이디인지 확인
             if (userRepository.findByUsername(signUpDto.getUsername()) == null) {
                 // 이미 가입되어 있는 이메일인지 확인
-                if (userRepository.findByEmail(signUpDto.getEmail()) == null) {
-                    // 인증코드 확인
-                    if (!authTokenService.checkAuthCode(signUpDto.getEmail(), signUpDto.getEmailAuthCode())) {
-                        error.setError("인증코드 불일치 또는 만료");
-                    }
-                } else {
+                if (!(userRepository.findByEmail(signUpDto.getEmail()) == null)) {
                     error.setError("이미 가입되어 있는 이메일");
                 }
             } else {

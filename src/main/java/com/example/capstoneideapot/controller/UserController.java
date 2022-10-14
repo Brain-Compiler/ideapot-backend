@@ -44,6 +44,11 @@ public class UserController {
         return userService.findPasswordCheckAuthCode(findUserPasswordDto);
     }
 
+    @GetMapping("/email-authentication/check-code")
+    public ErrorDto emailAuthCheckCode(@RequestBody EmailAuthenticationCheckDto emailAuthCheckDto) {
+        return userService.emailAuthCheckCode(emailAuthCheckDto);
+    }
+
     // POST
     @PostMapping("/email-authentication/sign-up")  // 이메일 인증 - 회원가입
     public void signUpCertificationEmail(@RequestBody EmailAuthenticationDto emailAuthDto) throws Exception {
