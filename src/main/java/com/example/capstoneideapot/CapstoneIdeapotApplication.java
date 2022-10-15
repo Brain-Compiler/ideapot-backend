@@ -26,7 +26,7 @@ public class CapstoneIdeapotApplication {
     @Bean
     CommandLineRunner run(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            userRepository.save(new User(null, "nicenicnic123", passwordEncoder.encode("1234"), "nicenicnic123@gmail.com", "박대형", "baseProfile", 0, LocalDateTime.now(), null));
+            userRepository.save(new User(null, "nicenicnic123", passwordEncoder.encode("1234"), "박대형", "nicenicnic123@gmail.com", "baseProfile", 0, LocalDateTime.now(), null));
 
             roleRepository.save(new Role(null, "ROLE_USER"));
             roleRepository.save(new Role(null, "ROLE_ADMIN"));

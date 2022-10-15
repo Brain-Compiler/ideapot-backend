@@ -7,9 +7,9 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
-// 1 => 회원가입
-// 2 => 아이디 찾기
-// 3 => 비밀번호 찾기
+// 1: 회원가입
+// 2: 아이디 찾기
+// 3: 비밀번호 찾기
 @Configuration
 public class MailConfig {
 

@@ -34,11 +34,6 @@ public class UserController {
         return userService.findUsername(findUserIdDto);
     }
 
-    @GetMapping("/find-password")  // 비밀번호 찾기 -> 사용자가 있는 지 확인 -> 있다면 해당하는 유저에게 이메일 전송
-    public ErrorDto findPassword(@RequestParam String username) throws Exception {
-        return userService.findPassword(username);
-    }
-
     @GetMapping("/find-password/check-authcode")  // 비밀번호 찾기 -> 이메일 인증 코드 확인
     public ErrorDto findPasswordCheckAuthCode(@RequestBody FindUserPasswordDto findUserPasswordDto) {
         return userService.findPasswordCheckAuthCode(findUserPasswordDto);
@@ -58,6 +53,11 @@ public class UserController {
     @PostMapping("/email-authentication/find-id")  // 이메일 인증 - 아이디 찾기
     public void findIdCertificationEmail(@RequestBody EmailAuthenticationDto emailAuthDto) throws Exception {
         authTokenService.sendAuthMail(emailAuthDto, 1);
+    }
+
+    @PostMapping("/email-authentication/find-password")  // 비밀번호 찾기 -> 사용자가 있는 지 확인 -> 있다면 해당하는 유저에게 이메일 전송
+    public ErrorDto findPasswordCertificationEmail(@RequestParam String username) throws Exception {
+        return userService.findPasswordCertificationEmail(username);
     }
 
     @PostMapping("/sign-up")  // 회원가입

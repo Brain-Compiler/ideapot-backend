@@ -65,7 +65,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             res.put("user_status", "탈퇴");
         }
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
         new ObjectMapper().writeValue(response.getOutputStream(), res);
     }
 }

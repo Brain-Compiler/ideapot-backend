@@ -19,13 +19,13 @@ public interface UserService {
 
     ResponseEntity<?> findUsername(FindUserIdDto findUserIdDto) throws Exception;
 
-    ErrorDto findPassword(String username) throws Exception;
-
     ErrorDto findPasswordCheckAuthCode(FindUserPasswordDto findUserPasswordDto);
 
     ErrorDto emailAuthCheckCode(EmailAuthenticationCheckDto emailAuthCehckDto);
 
     // POST
+    ErrorDto findPasswordCertificationEmail(String username) throws Exception;
+
     void saveUser(SignUpDto signUpDto, MultipartFile profile) throws IOException;
 
     // PUT

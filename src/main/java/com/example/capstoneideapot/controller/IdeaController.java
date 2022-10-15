@@ -33,22 +33,15 @@ public class IdeaController {
 
     // POST
     @PostMapping
-    public ErrorDto createIdea(IdeaDto ideaDto, @RequestPart List<MultipartFile> files) throws IOException {
-        ideaDto.setUserId(1L);
-        ideaDto.setTitle("아이디어 팝니다");
-        ideaDto.setDescription("대형이는 짱이다");
-        ideaDto.setPrice(1233300);
+    public ErrorDto createIdea(@RequestPart IdeaDto ideaDto,
+                               @RequestPart(required = false) List<MultipartFile> files) throws IOException {
         return ideaService.createIdea(ideaDto, files);
     }
 
     // PUT
-    @PutMapping
-    public ErrorDto editIdea(@RequestBody IdeaDto ideaDto, List<MultipartFile> files) throws  IOException {
-//        ideaDto.setId(1L);
-//        ideaDto.setUserId(1L);
-//        ideaDto.setTitle("아이디어 안팝니다");
-//        ideaDto.setDescription("박대형이니는는 짱이다");
-//        ideaDto.setPrice(100);
+    @PutMapping  // this method should contain id
+    public ErrorDto editIdea(@RequestPart IdeaDto ideaDto,
+                             @RequestPart(required = false) List<MultipartFile> files) throws  IOException {
         return ideaService.editIdea(ideaDto, files);
     }
 

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -68,23 +69,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ErrorDto findPassword(String username) throws Exception {
-        ErrorDto error = new ErrorDto("없음");
-
-        if (userRepository.findByUsername(username) == null) {
-            error.setError("일치하는 아이디가 없음");
-        } else {
-            User user = userRepository.findByUsername(username);
-            String email = user.getEmail();
-            String name = user.getName();
-
-            authTokenService.sendAuthMail(new EmailAuthenticationDto(name, email), 2);
-        }
-
-        return error;
-    }
-
-    @Override
     public ErrorDto findPasswordCheckAuthCode(FindUserPasswordDto findUserPasswordDto) {
         String username = findUserPasswordDto.getUsername();
         String email = userRepository.findByUsername(username).getEmail();
@@ -110,6 +94,23 @@ public class UserServiceImpl implements UserService {
     }
 
     // POST
+    @Override
+    public ErrorDto findPasswordCertificationEmail(String username) throws Exception {
+        ErrorDto error = new ErrorDto("없음");
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            error.setError("일치하는 아이디가 없음");
+        } else {
+            String name = user.getName();
+            String email = user.getEmail();
+
+            authTokenService.sendAuthMail(new EmailAuthenticationDto(name, email), 2);
+        }
+
+        return error;
+    }
+
     @Override  // 다시 짜 대형
     public void saveUser(SignUpDto signUpDto, MultipartFile profile) throws IOException {
         String path = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\profile";

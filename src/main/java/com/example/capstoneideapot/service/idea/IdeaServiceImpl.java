@@ -60,14 +60,16 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Override
     public ErrorDto editIdea(IdeaDto ideaDto, List<MultipartFile> files) throws IOException {
+        ErrorDto error = new ErrorDto("없음");
         Long ideaID = ideaDto.getId();
         Idea idea = ideaRepository.findById(ideaID).orElse(null);
-        ErrorDto error;
 
         if (idea != null) {
             setIdeaDtoToIdea(idea, ideaDto);
-            error = deleteIdeaFiles(idea);
-            filesService.saveIdeaAndFiles(idea, files);
+            if (files != null) {
+                error = deleteIdeaFiles(idea);
+                filesService.saveIdeaAndFiles(idea, files);
+            }
         } else {
             return new ErrorDto("게시물이 존재하지 않음");
         }
