@@ -29,17 +29,17 @@ public class UserController {
         return  userService.findUserById(id);
     }
 
-    @GetMapping("/find-id")  // 아이디 찾기
+    @PostMapping("/find-id")  // 아이디 찾기 // GET
     public ResponseEntity<?> findId(@RequestBody FindUserIdDto findUserIdDto) throws Exception {
         return userService.findUsername(findUserIdDto);
     }
 
-    @GetMapping("/find-password/check-authcode")  // 비밀번호 찾기 -> 이메일 인증 코드 확인
+    @PostMapping("/find-password/check-authcode")  // 비밀번호 찾기 -> 이메일 인증 코드 확인 // GET
     public ErrorDto findPasswordCheckAuthCode(@RequestBody FindUserPasswordDto findUserPasswordDto) {
         return userService.findPasswordCheckAuthCode(findUserPasswordDto);
     }
 
-    @PostMapping("/email-authentication/check-code")
+    @PostMapping("/email-authentication/check-code") // GET
     public ErrorDto emailAuthCheckCode(@RequestBody EmailAuthenticationCheckDto emailAuthCheckDto) {
         return userService.emailAuthCheckCode(emailAuthCheckDto);
     }
