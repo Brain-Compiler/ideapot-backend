@@ -1,5 +1,6 @@
 package com.example.capstoneideapot.service.files;
 
+import com.example.capstoneideapot.entity.Competition;
 import com.example.capstoneideapot.entity.Files;
 import com.example.capstoneideapot.entity.Idea;
 import com.example.capstoneideapot.repository.FilesRepository;
@@ -38,6 +39,15 @@ public class FilesServiceImpl implements FilesService {
 
         ideaRepository.save(idea);
         filesRepository.saveAll(fileEntitySet);
+    }
+
+    @Override
+    public void saveCompetitionAndFiles(Competition competition, MultipartFile poster) throws IOException {
+        String path = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\competition";
+        File file = new File(saveFileAndReturnFileName(path, poster));
+
+
+
     }
 
     @Override

@@ -41,6 +41,12 @@ public class User {
     @JsonIgnore
     private String profile;
 
+    // 회원, 기업, 정부
+    @NotNull
+    @JsonIgnore
+    private int type;
+
+    // 활동 중, 비활성화, 탈퇴
     @NotNull
     @JsonIgnore
     private int status;

@@ -1,5 +1,6 @@
 package com.example.capstoneideapot.service.files;
 
+import com.example.capstoneideapot.entity.Competition;
 import com.example.capstoneideapot.entity.Files;
 import com.example.capstoneideapot.entity.Idea;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ public interface FilesService {
 
     // POST
     void saveIdeaAndFiles(Idea idea, List<MultipartFile> files) throws IOException;
+
+    void saveCompetitionAndFiles(Competition competition, MultipartFile poster) throws IOException;
 
     // PUT
 
