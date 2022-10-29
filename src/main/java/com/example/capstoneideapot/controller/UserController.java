@@ -61,7 +61,7 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")  // 회원가입
-    public ResponseEntity<?> signUp(@RequestBody SignUpDto signUpDto, @RequestPart(value = "profile", required = false) MultipartFile file) throws IOException {
+    public ResponseEntity<?> signUp(@RequestBody SignUpDto signUpDto, @RequestPart(value = "static/profile", required = false) MultipartFile file) throws IOException {
         ErrorDto error = userService.checkSignUp(signUpDto);
         if (error.getError().equals("없음")) {
             userService.saveUser(signUpDto, file);
