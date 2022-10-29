@@ -89,7 +89,7 @@ public class UserController {
 
     // DELETE
 
-    // ELSE
+    // ELSE // TEST
     @GetMapping("/id-duplicate-check")  // 아이디 중복 체크
     public ErrorDto checkDuplicateUsername(@RequestParam String username) {
         return userService.checkDuplicateUsername(username);
