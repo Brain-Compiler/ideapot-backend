@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @PostMapping("/find-password/check-authcode")  // 비밀번호 찾기 -> 이메일 인증 코드 확인 // GET
-    public ErrorDto findPasswordCheckAuthCode(@RequestBody FindUserPasswordDto findUserPasswordDto) {
+    public ResponseEntity<Boolean> findPasswordCheckAuthCode(@RequestBody FindUserPasswordDto findUserPasswordDto) {
         return userService.findPasswordCheckAuthCode(findUserPasswordDto);
     }
 

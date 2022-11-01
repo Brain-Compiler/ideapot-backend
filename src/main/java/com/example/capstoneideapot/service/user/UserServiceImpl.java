@@ -92,16 +92,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ErrorDto findPasswordCheckAuthCode(FindUserPasswordDto findUserPasswordDto) {
+    public ResponseEntity<Boolean> findPasswordCheckAuthCode(FindUserPasswordDto findUserPasswordDto) {
         String username = findUserPasswordDto.getUsername();
         String email = userRepository.findByUsername(username).getEmail();
         String code = findUserPasswordDto.getCode();
-        ErrorDto error = new ErrorDto("없음");
 
         if (!authTokenService.checkAuthCode(email, code)) {
-            error.setError("인증코드 불일치");
+            return new ResponseEntity<>(false, HttpStatus.CONFLICT);
         }
-        return error;
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     @Override

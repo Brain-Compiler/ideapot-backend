@@ -20,7 +20,7 @@ public interface UserService {
 
     ResponseEntity<?> findUsername(FindUserIdDto findUserIdDto) throws Exception;
 
-    ErrorDto findPasswordCheckAuthCode(FindUserPasswordDto findUserPasswordDto);
+    ResponseEntity<Boolean> findPasswordCheckAuthCode(FindUserPasswordDto findUserPasswordDto);
 
     ResponseEntity<Boolean> emailAuthCheckCode(EmailAuthenticationCheckDto emailAuthCehckDto);
 
