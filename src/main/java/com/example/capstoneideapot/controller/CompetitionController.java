@@ -23,12 +23,12 @@ public class CompetitionController {
 
     // GET
     @GetMapping("/{id}")
-    public Competition getCompetitionById(@PathVariable Long id) {
+    public ResponseEntity<Competition> getCompetitionById(@PathVariable Long id) {
         return competitionService.findCompetitionById(id);
     }
 
     @GetMapping
-    public List<Competition> getCompetitionAll() {
+    public ResponseEntity<List<Competition>> getCompetitionAll() {
         return competitionService.findCompetitionAll();
     }
 
