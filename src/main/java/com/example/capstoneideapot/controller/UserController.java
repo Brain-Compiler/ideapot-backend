@@ -7,6 +7,7 @@ import com.example.capstoneideapot.service.mail.AuthTokenService;
 import com.example.capstoneideapot.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,8 +47,8 @@ public class UserController {
 
     // POST
     @PostMapping("/email-authentication/sign-up")  // 이메일 인증 - 회원가입
-    public void signUpCertificationEmail(@RequestBody EmailAuthenticationDto emailAuthDto) throws Exception {
-        authTokenService.sendAuthMail(emailAuthDto, 0);
+    public ResponseEntity<HttpStatus> signUpCertificationEmail(@RequestBody EmailAuthenticationDto emailAuthDto) throws Exception {
+        return authTokenService.sendAuthMail(emailAuthDto, 0);
     }
 
     @PostMapping("/email-authentication/find-id")  // 이메일 인증 - 아이디 찾기

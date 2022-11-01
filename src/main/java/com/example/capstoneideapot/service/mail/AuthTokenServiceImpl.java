@@ -4,6 +4,9 @@ import com.example.capstoneideapot.entity.AuthToken;
 import com.example.capstoneideapot.entity.dto.user.EmailAuthenticationDto;
 import com.example.capstoneideapot.repository.AuthTokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthTokenServiceImpl implements AuthTokenService {
@@ -79,15 +83,17 @@ public class AuthTokenServiceImpl implements AuthTokenService {
     }
 
     @Override
-    public void sendAuthMail(EmailAuthenticationDto emailAuthDto, int type) throws Exception {
+    public ResponseEntity<HttpStatus> sendAuthMail(EmailAuthenticationDto emailAuthDto, int type) throws Exception {
         try {
             String name = emailAuthDto.getName();
             String email = emailAuthDto.getEmail();
             MimeMessage mailMessage = createAuthMessage(name, email, type);
             javaMailSender.send(mailMessage);
+
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (MailException mailException) {
             mailException.printStackTrace();
-            throw new IllegalAccessException();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
