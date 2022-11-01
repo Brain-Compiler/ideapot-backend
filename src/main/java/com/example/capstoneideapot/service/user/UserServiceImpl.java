@@ -144,46 +144,53 @@ public class UserServiceImpl implements UserService {
 
     // PUT
     @Override
-    public ErrorDto changePassword(ChangePasswordDto changePasswordDto) {
-        ErrorDto error = new ErrorDto("없음");
-        String password = changePasswordDto.getPassword();
-        String passwordCheck = changePasswordDto.getPasswordCheck();
-        if (password.equals(passwordCheck)) {
-            String username = changePasswordDto.getUsername();
-            User user = userRepository.findByUsername(username);
-            user.setPassword(passwordEncoder.encode(password));
-            userRepository.save(user);
-        } else {
-            error.setError("비밀번호 불일치");
+    public ResponseEntity<Boolean> changePassword(ChangePasswordDto changePasswordDto) {
+        try {
+            String password = changePasswordDto.getPassword();
+            String passwordCheck = changePasswordDto.getPasswordCheck();
+
+            if (password.equals(passwordCheck)) {
+                String username = changePasswordDto.getUsername();
+                User user = userRepository.findByUsername(username);
+
+                user.setPassword(passwordEncoder.encode(password));
+
+                userRepository.save(user);
+            } else {
+                return new ResponseEntity<>(false, HttpStatus.CONFLICT);
+            }
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception exception) {
+            log.info("error: {}", exception.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return error;
     }
 
     @Override
-    public ErrorDto changePasswordByUser(ChangePasswordDto changePasswordDto) {
-        ErrorDto error = checkPassword(changePasswordDto);
-        if (error.getError().equals("없음")) {
-            error = changePassword(changePasswordDto);
+    public ResponseEntity<Boolean> changePasswordByUser(ChangePasswordDto changePasswordDto) {
+        if (checkPassword(changePasswordDto)) {
+            changePassword(changePasswordDto);
+        } else {
+            return new ResponseEntity<>(false, HttpStatus.CONFLICT);
         }
-        return error;
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     // DELETE
     @Override
-    public ErrorDto userWithDraw(UserWithDrawDto userWithDrawDto) {
-        ErrorDto error = new ErrorDto("없음");
+    public ResponseEntity<Boolean> userWithDraw(UserWithDrawDto userWithDrawDto) {
         String username = userWithDrawDto.getUsername();
         String password = userWithDrawDto.getPassword();
         User user = userRepository.findByUsername(username);
         String userPassword = user.getPassword();
 
         if (!passwordEncoder.matches(password, userPassword)) {
-            error.setError("기존 비밀번호 불일치");
+            return new ResponseEntity<>(false, HttpStatus.CONFLICT);
         } else {
             user.setStatus(2);
             userRepository.save(user);
         }
-        return error;
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     // ELSE
@@ -226,16 +233,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ErrorDto checkPassword(ChangePasswordDto changePasswordDto) {
-        ErrorDto error = new ErrorDto("없음");
+    public boolean checkPassword(ChangePasswordDto changePasswordDto) {
         String username = changePasswordDto.getUsername();
         String userPassword = userRepository.findByUsername(username).getPassword();
         String originalPassword = changePasswordDto.getOriginalPassword();
 
-        if (!passwordEncoder.matches(originalPassword, userPassword)) {
-            error.setError("기존 비밀번호 불일치");
-        }
-        return error;
+        return passwordEncoder.matches(originalPassword, userPassword);
     }
 
     @Override

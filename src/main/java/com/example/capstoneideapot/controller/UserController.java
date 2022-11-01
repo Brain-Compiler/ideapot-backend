@@ -69,17 +69,17 @@ public class UserController {
 
     // PUT
     @PutMapping("/find-password")  // 비밀번호 찾기 -> 비밀번호 변경(찾기)
-    public ErrorDto changePasswordByFind(@RequestBody ChangePasswordDto changePasswordDto) {
+    public ResponseEntity<Boolean> changePasswordByFind(@RequestBody ChangePasswordDto changePasswordDto) {
         return userService.changePassword(changePasswordDto);
     }
 
     @PutMapping("/change-password")  // 비밀번호 변경(유저)
-    public ErrorDto changePasswordByUser(@RequestBody ChangePasswordDto changePasswordDto) {
+    public ResponseEntity<Boolean> changePasswordByUser(@RequestBody ChangePasswordDto changePasswordDto) {
         return userService.changePasswordByUser(changePasswordDto);
     }
 
     @PutMapping("/user-withdraw")  // 회원탈퇴
-    public ErrorDto changePassword(@RequestBody UserWithDrawDto userWithDrawDto) {
+    public ResponseEntity<Boolean> changePassword(@RequestBody UserWithDrawDto userWithDrawDto) {
         return userService.userWithDraw(userWithDrawDto);
     }
 

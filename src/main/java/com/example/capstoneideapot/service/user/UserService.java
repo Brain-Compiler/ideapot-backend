@@ -30,19 +30,19 @@ public interface UserService {
     User saveUser(SignUpDto signUpDto, MultipartFile profile) throws IOException;
 
     // PUT
-    ErrorDto changePassword(ChangePasswordDto changePasswordDto);
+    ResponseEntity<Boolean> changePassword(ChangePasswordDto changePasswordDto);
 
-    ErrorDto changePasswordByUser(ChangePasswordDto changePasswordDto);
+    ResponseEntity<Boolean> changePasswordByUser(ChangePasswordDto changePasswordDto);
 
     // DELETE
-    ErrorDto userWithDraw(UserWithDrawDto userWithDrawDto);
+    ResponseEntity<Boolean> userWithDraw(UserWithDrawDto userWithDrawDto);
 
     // ELSE
     ResponseEntity<Boolean> checkDuplicateUsername(String username);
 
     ResponseEntity<?> checkSignUp(SignUpDto signUpDto, MultipartFile profile) throws IOException;
 
-    ErrorDto checkPassword(ChangePasswordDto changePasswordDto);
+    boolean checkPassword(ChangePasswordDto changePasswordDto);
 
     User createUser(SignUpDto signUpDto);
 
