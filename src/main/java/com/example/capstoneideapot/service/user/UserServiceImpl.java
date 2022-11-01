@@ -52,19 +52,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<?> findUsername(FindUserIdDto findUserIdDto) {
-        Map<String, String> id = new HashMap<>();
         String email = findUserIdDto.getEmail();
         String code = findUserIdDto.getCode();
 
         if (authTokenService.checkAuthCode(email, code)) {
+            Map<String, String> id = new HashMap<>();
             String name = findUserIdDto.getName();
             String username = userRepository.findByNameAndEmail(name, email).getUsername();
+            int idLength = username.length();
+            username = username.substring(0, idLength);
 
+            for (int i = 0; i < idLength; i++) {
+                username += "*";
+            }
             id.put("id", username);
 
-            return ResponseEntity.ok(id);
+            return new ResponseEntity<>(id, HttpStatus.OK);
         } else {
-            return ResponseEntity.ok(new ErrorDto("인증코드 불일치 또는 만료"));
+            ErrorDto error = new ErrorDto("인증코드 불일치 또는 만료");
+            return new ResponseEntity<>(error, HttpStatus.CONFLICT);
         }
     }
 
