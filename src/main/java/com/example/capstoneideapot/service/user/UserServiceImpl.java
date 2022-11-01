@@ -52,25 +52,35 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<?> findUsername(FindUserIdDto findUserIdDto) {
-        String email = findUserIdDto.getEmail();
-        String code = findUserIdDto.getCode();
+        try {
+            String email = findUserIdDto.getEmail();
+            String code = findUserIdDto.getCode();
 
-        if (authTokenService.checkAuthCode(email, code)) {
-            Map<String, String> id = new HashMap<>();
-            String name = findUserIdDto.getName();
-            String username = userRepository.findByNameAndEmail(name, email).getUsername();
-            int idLength = username.length();
-            username = username.substring(0, idLength);
+            if (authTokenService.checkAuthCode(email, code)) {
+                Map<String, String> id = new HashMap<>();
+                String name = findUserIdDto.getName();
+                String username = userRepository.findByNameAndEmail(name, email).getUsername();
 
-            for (int i = 0; i < idLength; i++) {
-                username += "*";
+                int idLength = username.length();
+                username = username.substring(0, idLength / 2);
+
+                for (int i = 0; i < idLength / 2; i++) {
+                    username += "*";
+                }
+
+                if (idLength % 2 != 0) {
+                    username += "*";
+                }
+                id.put("id", username);
+
+                return new ResponseEntity<>(id, HttpStatus.OK);
+            } else {
+                ErrorDto error = new ErrorDto("인증코드 불일치 또는 만료");
+                return new ResponseEntity<>(error, HttpStatus.CONFLICT);
             }
-            id.put("id", username);
-
-            return new ResponseEntity<>(id, HttpStatus.OK);
-        } else {
-            ErrorDto error = new ErrorDto("인증코드 불일치 또는 만료");
-            return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+        } catch (Exception exception) {
+            log.info("error: {}", exception.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
