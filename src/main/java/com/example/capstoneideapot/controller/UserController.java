@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/email-authentication/check-code") // GET
-    public ErrorDto emailAuthCheckCode(@RequestBody EmailAuthenticationCheckDto emailAuthCheckDto) {
+    public ResponseEntity<Boolean> emailAuthCheckCode(@RequestBody EmailAuthenticationCheckDto emailAuthCheckDto) {
         return userService.emailAuthCheckCode(emailAuthCheckDto);
     }
 

@@ -82,15 +82,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ErrorDto emailAuthCheckCode(EmailAuthenticationCheckDto emailAuthCheckDto) {
-        ErrorDto error = new ErrorDto("없음");
+    public ResponseEntity<Boolean> emailAuthCheckCode(EmailAuthenticationCheckDto emailAuthCheckDto) {
         String email = emailAuthCheckDto.getEmail();
         String code = emailAuthCheckDto.getCode();
 
         if (!authTokenService.checkAuthCode(email, code)) {
-            error.setError("인증코드 불일치 또는 만료");
+            return new ResponseEntity<>(false, HttpStatus.CONFLICT);
         }
-        return error;
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     // POST

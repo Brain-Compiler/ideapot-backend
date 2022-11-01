@@ -21,7 +21,7 @@ public interface UserService {
 
     ErrorDto findPasswordCheckAuthCode(FindUserPasswordDto findUserPasswordDto);
 
-    ErrorDto emailAuthCheckCode(EmailAuthenticationCheckDto emailAuthCehckDto);
+    ResponseEntity<Boolean> emailAuthCheckCode(EmailAuthenticationCheckDto emailAuthCehckDto);
 
     // POST
     ErrorDto findPasswordCertificationEmail(String username) throws Exception;
