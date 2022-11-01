@@ -3,6 +3,7 @@ package com.example.capstoneideapot.service.user;
 import com.example.capstoneideapot.entity.User;
 import com.example.capstoneideapot.entity.dto.ErrorDto;
 import com.example.capstoneideapot.entity.dto.user.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +25,7 @@ public interface UserService {
     ResponseEntity<Boolean> emailAuthCheckCode(EmailAuthenticationCheckDto emailAuthCehckDto);
 
     // POST
-    ErrorDto findPasswordCertificationEmail(String username) throws Exception;
+    ResponseEntity<HttpStatus> findPasswordCertificationEmail(String username) throws Exception;
 
     User saveUser(SignUpDto signUpDto, MultipartFile profile) throws IOException;
 

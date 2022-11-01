@@ -117,20 +117,23 @@ public class UserServiceImpl implements UserService {
 
     // POST
     @Override
-    public ErrorDto findPasswordCertificationEmail(String username) throws Exception {
-        ErrorDto error = new ErrorDto("없음");
-        User user = userRepository.findByUsername(username);
+    public ResponseEntity<HttpStatus> findPasswordCertificationEmail(String username) throws Exception {
+        try {
+            User user = userRepository.findByUsername(username);
 
-        if (user == null) {
-            error.setError("일치하는 아이디가 없음");
-        } else {
-            String name = user.getName();
-            String email = user.getEmail();
+            if (user == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
+                String name = user.getName();
+                String email = user.getEmail();
 
-            authTokenService.sendAuthMail(new EmailAuthenticationDto(name, email), 2);
+                authTokenService.sendAuthMail(new EmailAuthenticationDto(name, email), 2);
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception exception) {
+            log.info("error: {}", exception.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return error;
     }
 
     @Override  // 다시 짜 대형
