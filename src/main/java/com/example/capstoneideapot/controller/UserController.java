@@ -26,8 +26,8 @@ public class UserController {
 
     // GET
     @GetMapping("/find-user/{id}")  // Test // User 찾기
-    public User findUserById(@PathVariable Long id) {
-        return  userService.findUserById(id);
+    public ResponseEntity<User> findUserById(@PathVariable Long id) {
+        return userService.findUserById(id);
     }
 
     @PostMapping("/find-id")  // 아이디 찾기 // GET

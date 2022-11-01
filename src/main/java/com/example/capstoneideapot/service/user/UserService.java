@@ -13,7 +13,7 @@ import java.io.IOException;
 public interface UserService {
 
     // GET
-    User findUserById(Long id);
+    ResponseEntity<User> findUserById(Long id);
 
     User getUserByUsername(String username);
 

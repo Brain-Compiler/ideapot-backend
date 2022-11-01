@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -41,8 +42,14 @@ public class UserServiceImpl implements UserService {
     // GET
 
     @Override
-    public User findUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
+    public ResponseEntity<User> findUserById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isPresent()) {
+            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @Override
