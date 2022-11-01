@@ -22,10 +22,13 @@ public class File {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String status;
+
     @NotNull
     private String name;
 
-    public File(String name) {
+    public File(String status, String name) {
+        this.status = status;
         this.name = name;
     }
 

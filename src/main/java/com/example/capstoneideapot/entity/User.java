@@ -37,10 +37,6 @@ public class User {
     @JsonIgnore
     private String email;
 
-    @NotNull
-    @JsonIgnore
-    private String profile;
-
     // 회원, 기업, 정부
     @NotNull
     @JsonIgnore
@@ -54,6 +50,9 @@ public class User {
     @NotNull
     @JsonIgnore
     private LocalDateTime createAt;
+
+    @OneToOne
+    private File profile;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();

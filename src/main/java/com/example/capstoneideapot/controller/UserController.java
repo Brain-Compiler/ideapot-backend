@@ -61,14 +61,9 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")  // 회원가입
-    public ResponseEntity<?> signUp(@RequestBody SignUpDto signUpDto, @RequestPart(value = "static/profile", required = false) MultipartFile file) throws IOException {
-        ErrorDto error = userService.checkSignUp(signUpDto);
-        if (error.getError().equals("없음")) {
-            userService.saveUser(signUpDto, file);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.badRequest().body(error);
-        }
+    public ResponseEntity<?> signUp(@RequestPart SignUpDto signUpDto,
+                                    @RequestPart(required = false) MultipartFile profile) throws IOException {
+        return userService.checkSignUp(signUpDto, profile);
     }
 
     // PUT

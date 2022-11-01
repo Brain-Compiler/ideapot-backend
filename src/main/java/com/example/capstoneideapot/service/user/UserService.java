@@ -26,7 +26,7 @@ public interface UserService {
     // POST
     ErrorDto findPasswordCertificationEmail(String username) throws Exception;
 
-    void saveUser(SignUpDto signUpDto, MultipartFile profile) throws IOException;
+    User saveUser(SignUpDto signUpDto, MultipartFile profile) throws IOException;
 
     // PUT
     ErrorDto changePassword(ChangePasswordDto changePasswordDto);
@@ -39,11 +39,11 @@ public interface UserService {
     // ELSE
     ErrorDto checkDuplicateUsername(String username);
 
-    ErrorDto checkSignUp(SignUpDto signUpDto);
+    ResponseEntity<?> checkSignUp(SignUpDto signUpDto, MultipartFile profile) throws IOException;
 
     ErrorDto checkPassword(ChangePasswordDto changePasswordDto);
 
-    User createUser(SignUpDto signUpDto, String profileName);
+    User createUser(SignUpDto signUpDto);
 
     void addBasicRoleToUser(User user);
 

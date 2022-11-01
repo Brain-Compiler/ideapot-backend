@@ -31,7 +31,7 @@ public class CustomerController {
     }
 
     // POST
-    @PostMapping("/my-customer-service") // 자기의 고객센터 문의 내역만 가져옴
+    @PostMapping("/my-customer-service") // 자기의 고객센터 문의 내역만 가져옴 // admin
     public ResponseEntity<List<Customer>> getMyCustomerService(@RequestBody CustomerDto customerDto) {
         return customerService.getMyCustomerService(customerDto);
     }

@@ -3,9 +3,11 @@ package com.example.capstoneideapot.service.files;
 import com.example.capstoneideapot.entity.Competition;
 import com.example.capstoneideapot.entity.File;
 import com.example.capstoneideapot.entity.Idea;
+import com.example.capstoneideapot.entity.User;
 import com.example.capstoneideapot.repository.CompetitionRepository;
 import com.example.capstoneideapot.repository.FilesRepository;
 import com.example.capstoneideapot.repository.IdeaRepository;
+import com.example.capstoneideapot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class FilesServiceImpl implements FilesService {
 
+    private final UserRepository userRepository;
+
     private final IdeaRepository ideaRepository;
 
     private final CompetitionRepository competitionRepository;
@@ -30,6 +34,33 @@ public class FilesServiceImpl implements FilesService {
     private final String path = System.getProperty("user.dir") + "\\src\\main\\resources\\static";
 
     @Override
+    public User saveUserAndProfile(User user, MultipartFile profile) throws IOException {
+        String profilePath = path + "\\profile";
+        File profileEntity = null;
+        boolean status = true;
+
+        if (profile != null) {
+           if (!profile.getOriginalFilename().equals("")) {
+               profileEntity = new File("profile", saveFileAndReturnFileName(profilePath, profile));
+               filesRepository.save(profileEntity);
+           } else {
+               status = false;
+           }
+        } else {
+            status = false;
+        }
+        
+        if (!status) {
+            profileEntity = filesRepository.findByName("basicProfile");
+        }
+        
+        user.setProfile(profileEntity);
+        userRepository.save(user);
+
+        return user;
+    }
+
+    @Override
     public void saveIdeaAndFiles(Idea idea, List<MultipartFile> files) throws IOException {
         if (files != null) {
             if (!files.get(0).getOriginalFilename().equals("")) {
@@ -37,8 +68,7 @@ public class FilesServiceImpl implements FilesService {
                 Set<File> fileEntitySet = new HashSet<>();
 
                 for (MultipartFile file : files) {
-                    File fileEntity = new File(saveFileAndReturnFileName(ideaPath, file));
-
+                    File fileEntity = new File("idea", saveFileAndReturnFileName(ideaPath, file));
                     log.info("file name: {}", file.getOriginalFilename());
 
                     fileEntitySet.add(fileEntity);
@@ -60,7 +90,7 @@ public class FilesServiceImpl implements FilesService {
         if (poster != null) {
             if (!poster.getOriginalFilename().equals("")) {
                 String competitionPath = path + "\\competition";
-                File file = new File(saveFileAndReturnFileName(competitionPath, poster));
+                File file = new File("competition", saveFileAndReturnFileName(competitionPath, poster));
 
                 competition.setFiles(file);
 

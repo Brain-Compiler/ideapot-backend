@@ -24,12 +24,14 @@ public class CapstoneIdeapotApplication {
     }
 
     @Bean
-    CommandLineRunner run(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    CommandLineRunner run(UserRepository userRepository, RoleRepository roleRepository, FilesRepository filesRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            userRepository.save(new User(null, "nicenicnic123", passwordEncoder.encode("1234"), "박대형", "nicenicnic123@gmail.com", "baseProfile", 0, 0, LocalDateTime.now(), null));
+            userRepository.save(new User(null, "nicenicnic123", passwordEncoder.encode("1234"), "박대형", "nicenicnic123@gmail.com", 0, 0, LocalDateTime.now(), null, null));
 
             roleRepository.save(new Role(null, "ROLE_USER"));
             roleRepository.save(new Role(null, "ROLE_ADMIN"));
+
+            filesRepository.save(new File(null, "profile", "basicProfile"));
 //
 //            ideaRepository.save(new Idea(null, 1L, "대형이", "설명", 1, 1000, LocalDateTime.now(), null, null));
 //
