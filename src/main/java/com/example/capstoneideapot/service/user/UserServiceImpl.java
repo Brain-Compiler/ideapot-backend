@@ -165,12 +165,11 @@ public class UserServiceImpl implements UserService {
 
     // ELSE
     @Override
-    public ErrorDto checkDuplicateUsername(String username) {
-        ErrorDto error = new ErrorDto("없음");
+    public ResponseEntity<Boolean> checkDuplicateUsername(String username) {
         if (getUserByUsername(username) != null) {
-            error.setError("아이디 중복");
+            return new ResponseEntity<>(false, HttpStatus.CONFLICT);
         }
-        return error;
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     @Override

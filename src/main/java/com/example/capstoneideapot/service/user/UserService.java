@@ -37,7 +37,7 @@ public interface UserService {
     ErrorDto userWithDraw(UserWithDrawDto userWithDrawDto);
 
     // ELSE
-    ErrorDto checkDuplicateUsername(String username);
+    ResponseEntity<Boolean> checkDuplicateUsername(String username);
 
     ResponseEntity<?> checkSignUp(SignUpDto signUpDto, MultipartFile profile) throws IOException;
 
