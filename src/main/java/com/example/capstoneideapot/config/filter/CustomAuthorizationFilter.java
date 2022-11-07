@@ -43,19 +43,25 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     String username = decodedJWT.getSubject();
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
                     stream(roles).forEach(role -> {
                         authorities.add(new SimpleGrantedAuthority(role));
                     });
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(username, null, authorities);
+
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);
-                } catch (Exception e) {
-                    log.error("Error logging in: {}", e.getMessage());
-                    response.setHeader("error", e.getMessage());
+                } catch (Exception exception) {
+                    String errorMessage = exception.getMessage();
+
+                    log.error("Error logging in: {}", errorMessage);
+                    response.setHeader("error", errorMessage);
                     response.setStatus(FORBIDDEN.value());
+
                     Map<String, String> error = new HashMap<>();
-                    error.put("error_message", e.getMessage());
+
+                    error.put("error_message", errorMessage);
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                     new ObjectMapper().writeValue(response.getOutputStream(), error);
                 }

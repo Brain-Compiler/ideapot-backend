@@ -1,7 +1,10 @@
 package com.example.capstoneideapot.config.auth;
 
 import com.example.capstoneideapot.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,13 +15,11 @@ import java.util.Collection;
 
 @Data
 @Configurable
+@NoArgsConstructor
+@AllArgsConstructor
 public class PrincipalDetails implements UserDetails {
 
     private User user;
-
-    public PrincipalDetails(User user) {
-        this.user = user;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
