@@ -3,6 +3,8 @@ package com.example.capstoneideapot.service.idea;
 import com.example.capstoneideapot.entity.Idea;
 import com.example.capstoneideapot.entity.dto.ErrorDto;
 import com.example.capstoneideapot.entity.dto.idea.IdeaDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,20 +16,20 @@ import java.util.List;
 public interface IdeaService {
 
     // GET
-    Idea getIdeaById(Long id);
+    ResponseEntity<Idea> getIdeaById(Long id);
 
-    List<Idea> getIdeaAll();
+    ResponseEntity<List<Idea>> getIdeaAll();
 
     // POST
-    ErrorDto createIdea(IdeaDto ideaDto, List<MultipartFile> files) throws IOException;
+    ResponseEntity<Idea> createIdea(IdeaDto ideaDto, List<MultipartFile> files) throws IOException;
 
     // PUT
-    ErrorDto editIdea(@RequestBody IdeaDto ideaDto, List<MultipartFile> files) throws IOException;
+    ResponseEntity<HttpStatus> editIdea(@RequestBody IdeaDto ideaDto, List<MultipartFile> files) throws IOException;
 
     // DELETE
-    ErrorDto deleteIdea(Long id);
+    ResponseEntity<HttpStatus> deleteIdea(Long id);
 
-    ErrorDto deleteIdeaFiles(Idea idea);
+    ResponseEntity<HttpStatus> deleteIdeaFiles(Idea idea);
 
     // ELSE
     Idea createIdeaEntity(IdeaDto ideaDto);

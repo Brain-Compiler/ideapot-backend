@@ -11,12 +11,15 @@ import com.example.capstoneideapot.repository.UserRepository;
 import com.example.capstoneideapot.service.files.FilesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -33,64 +36,82 @@ public class IdeaServiceImpl implements IdeaService {
     private final FilesService filesService;
 
     @Override
-    public Idea getIdeaById(Long id) {
-        return ideaRepository.findById(id).orElse(null);
+    public ResponseEntity<Idea> getIdeaById(Long id) {
+        Optional<Idea> idea = ideaRepository.findById(id);
+
+        if (idea.isPresent()) {
+            return new ResponseEntity<>(idea.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @Override
-    public List<Idea> getIdeaAll() {
-        return ideaRepository.findAll();
+    public ResponseEntity<List<Idea>> getIdeaAll() {
+        List<Idea> ideaList = ideaRepository.findAll();
+
+        if (ideaList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(ideaList, HttpStatus.OK);
+        }
     }
 
     @Override
-    public ErrorDto createIdea(IdeaDto ideaDto, List<MultipartFile> files) {
-        ErrorDto error = new ErrorDto("없음");
-
+    public ResponseEntity<Idea> createIdea(IdeaDto ideaDto, List<MultipartFile> files) {
         try {
             Idea idea = createIdeaEntity(ideaDto);
 
             filesService.saveIdeaAndFiles(idea, files);
+            return new ResponseEntity<>(idea, HttpStatus.OK);
         } catch (Exception exception) {
-            error.setError("오류");
-            log.info(exception.getMessage());
+            log.info("error: {}", exception.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return error;
     }
 
     @Override
-    public ErrorDto editIdea(IdeaDto ideaDto, List<MultipartFile> files) throws IOException {
-        ErrorDto error = new ErrorDto("없음");
-        Long ideaID = ideaDto.getId();
-        Idea idea = ideaRepository.findById(ideaID).orElse(null);
+    public ResponseEntity<HttpStatus> editIdea(IdeaDto ideaDto, List<MultipartFile> files) {
+        try {
+            Long ideaID = ideaDto.getId();
+            Idea idea = ideaRepository.findById(ideaID).orElse(null);
 
-        if (idea != null) {
-            setIdeaDtoToIdea(idea, ideaDto);
-            if (files != null) {
-                error = deleteIdeaFiles(idea);
-                filesService.saveIdeaAndFiles(idea, files);
+            if (idea != null) {
+                setIdeaDtoToIdea(idea, ideaDto);
+
+                if (files != null) {
+                    ResponseEntity<HttpStatus> response = deleteIdeaFiles(idea);
+                    filesService.saveIdeaAndFiles(idea, files);
+
+                    return response;
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-        } else {
-            return new ErrorDto("게시물이 존재하지 않음");
+        } catch (Exception exception) {
+            log.info("error: {}", exception.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return error;
     }
 
     @Override
-    public ErrorDto deleteIdea(Long id) {
+    public ResponseEntity<HttpStatus> deleteIdea(Long id) {
         Idea idea = ideaRepository.findById(id).orElse(null);
 
         if (idea != null) {
-            ErrorDto error = deleteIdeaFiles(idea);
+            ResponseEntity<HttpStatus> response = deleteIdeaFiles(idea);
             ideaRepository.delete(idea);
-            return error;
+
+            return response;
         } else {
-            return new ErrorDto("게시글이 존재하지 않음");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @Override
-    public ErrorDto deleteIdeaFiles(Idea idea) {
-        ErrorDto error = new ErrorDto("없음");
+    public ResponseEntity<HttpStatus> deleteIdeaFiles(Idea idea) {
         Set<File> ideaFiles = idea.getFiles();
 
         idea.setFiles(null);
@@ -104,14 +125,14 @@ public class IdeaServiceImpl implements IdeaService {
 
                 if (file.exists()) {
                     if (!file.delete()) {
-                        error.setError("파일 삭제 실패");
+                        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
                     }
                 } else {
-                    error.setError("파일이 존재하지 않음");
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }
             }
         }
-        return error;
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
