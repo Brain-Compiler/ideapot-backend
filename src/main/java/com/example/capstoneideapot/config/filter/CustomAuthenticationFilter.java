@@ -30,18 +30,26 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     private final AuthenticationManager authenticationManager;
 
-    @Override  // 인증 시도
+    @Override  // 인증 시도 // 2: UsernamePasswordAuthenticationToken 발급
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        log.info("Username is: {}", username);
-        log.info("Password is: {}", password);
+        log.info("1");
+        log.info("2");
+        String username = request.getParameter("username"); // 2-1: Username 파싱
+        String password = request.getParameter("password"); // 2-2: Password 파싱
+        log.info("User info : {}, {}", username, password);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+        log.info("3");
+        log.info("4");
         return authenticationManager.authenticate(authenticationToken);
+        // 3: AuthenticationManager에게 UsernamePasswordAuthenticationToken 전달
+        // 4: AuthenticationManager는 여러 인증 처리 AuthenticationProvider가 존재 -> 전달
     }
 
-    @Override  // 인증 성공 // 로그인 성공하면 호출
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+
+
+    @Override  // 인증 성공 // 로그인 성공하면 호출 // 8: 인증 성공시 토큰 발급
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
+        log.info("8");
         PrincipalDetails user = (PrincipalDetails) authentication.getPrincipal();
         int userStatus = user.getUser().getStatus();
         Map<String, String> res = new HashMap<>();
