@@ -15,7 +15,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -44,8 +43,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         // 3: AuthenticationManager에게 UsernamePasswordAuthenticationToken 전달
         // 4: AuthenticationManager는 여러 인증 처리 AuthenticationProvider가 존재 -> 전달
     }
-
-
 
     @Override  // 인증 성공 // 로그인 성공하면 호출 // 8: 인증 성공시 토큰 발급
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {

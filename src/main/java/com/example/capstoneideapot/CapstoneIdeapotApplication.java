@@ -19,7 +19,7 @@ public class CapstoneIdeapotApplication {
     }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder()   {
         return new BCryptPasswordEncoder();
     }
 
@@ -33,12 +33,6 @@ public class CapstoneIdeapotApplication {
             roleRepository.save(new Role(null, "ROLE_ADMIN"));
 
             filesRepository.save(new File(null, "profile", "basicProfile"));
-
-//            ideaRepository.save(new Idea(null, 1L, "대형이", "설명", 1, 1000, LocalDateTime.now(), null, null));
-//
-//            fileRepository.save(new File(null, 1L, "아이디어", "무슨 사진", "경로", LocalDateTime.now(), null, null, null, null));
-//
-//            ideaFileRepository.save(new IdeaFile(null, ideaRepository.findById(1L).orElse(null), fileRepository.findById(1L).orElse(null)));
         };
     };
 

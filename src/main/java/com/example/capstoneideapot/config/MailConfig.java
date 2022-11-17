@@ -1,5 +1,6 @@
 package com.example.capstoneideapot.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,13 +14,19 @@ import java.util.Properties;
 @Configuration
 public class MailConfig {
 
+    @Value("${userName}")
+    private String userName;
+
+    @Value("${userPassword}")
+    private String userPassword;
+
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
         javaMailSender.setHost("smtp.naver.com");
-        javaMailSender.setUsername("ideapot_@naver.com");
-        javaMailSender.setPassword("Brain-Compiler!");
+        javaMailSender.setUsername(userName);
+        javaMailSender.setPassword(userPassword);
         javaMailSender.setPort(465);
         javaMailSender.setJavaMailProperties(getMailProperties());
 

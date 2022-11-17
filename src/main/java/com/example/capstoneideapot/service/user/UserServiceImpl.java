@@ -20,6 +20,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 
@@ -243,13 +244,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(SignUpDto signUpDto) {
-        User user = new User();
-        user.setUsername(signUpDto.getUsername());
-        user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
-        user.setName(signUpDto.getName());
-        user.setEmail(signUpDto.getEmail());
-        user.setStatus(0);
-        user.setCreateAt(LocalDateTime.now());
+        User user = User.builder()
+                .username(signUpDto.getUsername())
+                .password(passwordEncoder.encode(signUpDto.getPassword()))
+                .name(signUpDto.getName())
+                .email(signUpDto.getEmail())
+                .status(0)
+                .createAt(LocalDateTime.now())
+                .roles(new HashSet<>())
+                .build();
+
         addBasicRoleToUser(user);
         return user;
     }
