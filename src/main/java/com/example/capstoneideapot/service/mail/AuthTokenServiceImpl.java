@@ -104,6 +104,7 @@ public class AuthTokenServiceImpl implements AuthTokenService {
 //        authToken.setExpirationDate(LocalDateTime.now().plusMinutes(3L));  // 3분 후 만료
 //        authToken.setExpired(false);
 
+
         return AuthToken.builder()
                 .email(email)
                 .code(code)
