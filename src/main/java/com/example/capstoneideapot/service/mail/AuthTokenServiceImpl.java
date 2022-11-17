@@ -62,7 +62,6 @@ public class AuthTokenServiceImpl implements AuthTokenService {
             String title = "비밀번호 찾기";
             mailForm(name, message, code, year, month, day, hour, min, title);
         }
-
         return message;
     }
 
@@ -99,12 +98,18 @@ public class AuthTokenServiceImpl implements AuthTokenService {
 
     @Override
     public AuthToken createAuthToken(String email, String code) {
-        AuthToken authToken = new AuthToken();
-        authToken.setEmail(email);
-        authToken.setCode(code);
-        authToken.setExpirationDate(LocalDateTime.now().plusMinutes(3L));  // 3분 후 만료
-        authToken.setExpired(false);
-        return authToken;
+//        AuthToken authToken = new AuthToken();
+//        authToken.setEmail(email);
+//        authToken.setCode(code);
+//        authToken.setExpirationDate(LocalDateTime.now().plusMinutes(3L));  // 3분 후 만료
+//        authToken.setExpired(false);
+
+        return AuthToken.builder()
+                .email(email)
+                .code(code)
+                .expirationDate(LocalDateTime.now().plusMinutes(3L))
+                .expired(false)
+                .build();
     }
 
     private void mailForm(String name, MimeMessage message, String code, int year, int month, int day, int hour, int min, String title) throws MessagingException {
