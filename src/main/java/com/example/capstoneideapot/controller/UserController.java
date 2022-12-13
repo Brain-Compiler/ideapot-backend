@@ -1,10 +1,16 @@
 package com.example.capstoneideapot.controller;
 
 import com.example.capstoneideapot.entity.User;
-import com.example.capstoneideapot.entity.dto.ErrorDto;
 import com.example.capstoneideapot.entity.dto.user.*;
 import com.example.capstoneideapot.service.mail.AuthTokenService;
 import com.example.capstoneideapot.service.user.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,6 +24,7 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Tag(name = "계정", description = "계정 관련 api입니다.")
 public class UserController {
 
     private final UserService userService;
@@ -61,6 +68,15 @@ public class UserController {
         return userService.findPasswordCertificationEmail(username);
     }
 
+    @Operation(summary = "회원가입 메소드", description = "회원가입 메서드입니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
+    })
+    @Parameters({
+
+    })
     @PostMapping("/sign-up")  // 회원가입
     public ResponseEntity<?> signUp(@RequestPart SignUpDto signUpDto,
                                     @RequestPart(required = false) MultipartFile profile) throws IOException {

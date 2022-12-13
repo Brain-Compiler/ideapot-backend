@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping("/api/idea")
 public class IdeaController {
 
-    private final IdeaService ideaService;
+    private final IdeaService ideaService ;
 
     // GET
     @GetMapping("/{id}")
