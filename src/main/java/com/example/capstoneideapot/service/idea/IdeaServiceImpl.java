@@ -5,6 +5,7 @@ import com.example.capstoneideapot.entity.Idea;
 import com.example.capstoneideapot.entity.User;
 import com.example.capstoneideapot.entity.dto.ErrorDto;
 import com.example.capstoneideapot.entity.dto.idea.IdeaDto;
+import com.example.capstoneideapot.entity.dto.idea.IdeaLDto;
 import com.example.capstoneideapot.repository.FilesRepository;
 import com.example.capstoneideapot.repository.IdeaRepository;
 import com.example.capstoneideapot.repository.UserRepository;
@@ -17,7 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -47,14 +51,27 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     @Override
-    public ResponseEntity<List<Idea>> getIdeaAll() {
+    public ResponseEntity<List<IdeaLDto>> getIdeaAll() {
         List<Idea> ideaList = ideaRepository.findAll();
+        List<IdeaLDto> ideaLDtos = new ArrayList<>();
 
         if (ideaList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(ideaList, HttpStatus.OK);
         }
+
+        for (Idea idea : ideaList) {
+            IdeaLDto ideaLDto = new IdeaLDto();
+            ideaLDto.setId(idea.getId());
+            ideaLDto.setUser(idea.getUser());
+            ideaLDto.setTitle(idea.getTitle());
+            ideaLDto.setDescription(idea.getDescription());
+            ideaLDto.setPrice(new DecimalFormat("###,###,###,###").format(idea.getPrice()) + "￦");
+            ideaLDto.setStatus(idea.getStatus());
+            ideaLDto.setCreatedAt(idea.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH")) + "h");
+
+            ideaLDtos.add(ideaLDto);
+        }
+        return new ResponseEntity<>(ideaLDtos, HttpStatus.OK);
     }
 
     @Override

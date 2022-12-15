@@ -3,6 +3,7 @@ package com.example.capstoneideapot.service.idea;
 import com.example.capstoneideapot.entity.Idea;
 import com.example.capstoneideapot.entity.dto.ErrorDto;
 import com.example.capstoneideapot.entity.dto.idea.IdeaDto;
+import com.example.capstoneideapot.entity.dto.idea.IdeaLDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public interface IdeaService {
     // GET
     ResponseEntity<Idea> getIdeaById(Long id);
 
-    ResponseEntity<List<Idea>> getIdeaAll();
+    ResponseEntity<List<IdeaLDto>> getIdeaAll();
 
     // POST
     ResponseEntity<Idea> createIdea(IdeaDto ideaDto, List<MultipartFile> files) throws IOException;

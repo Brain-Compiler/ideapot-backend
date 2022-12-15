@@ -3,6 +3,7 @@ package com.example.capstoneideapot.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -20,5 +21,14 @@ public class WebConfig implements WebMvcConfigurer {
                         HttpMethod.PUT.name(),
                         HttpMethod.DELETE.name()
                 );
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        String path = System.getProperty("user.dir") + "\\src\\main\\resources\\static";
+
+        registry
+                .addResourceHandler("/images/**")
+                .addResourceLocations(path + "\\idea");
     }
 }

@@ -3,6 +3,7 @@ package com.example.capstoneideapot.controller;
 import com.example.capstoneideapot.entity.Idea;
 import com.example.capstoneideapot.entity.dto.ErrorDto;
 import com.example.capstoneideapot.entity.dto.idea.IdeaDto;
+import com.example.capstoneideapot.entity.dto.idea.IdeaLDto;
 import com.example.capstoneideapot.service.idea.IdeaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class IdeaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Idea>> getIdeaAll() {
+    public ResponseEntity<List<IdeaLDto>> getIdeaAll() {
         return ideaService.getIdeaAll();
     }
 
