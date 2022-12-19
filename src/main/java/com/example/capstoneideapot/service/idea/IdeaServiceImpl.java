@@ -60,14 +60,16 @@ public class IdeaServiceImpl implements IdeaService {
         }
 
         for (Idea idea : ideaList) {
-            IdeaLDto ideaLDto = new IdeaLDto();
-            ideaLDto.setId(idea.getId());
-            ideaLDto.setUser(idea.getUser());
-            ideaLDto.setTitle(idea.getTitle());
-            ideaLDto.setDescription(idea.getDescription());
-            ideaLDto.setPrice(new DecimalFormat("###,###,###,###").format(idea.getPrice()) + "￦");
-            ideaLDto.setStatus(idea.getStatus());
-            ideaLDto.setCreatedAt(idea.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH")) + "h");
+            IdeaLDto ideaLDto = IdeaLDto.builder()
+                    .id(idea.getId())
+                    .user(idea.getUser())
+                    .title(idea.getTitle())
+                    .description(idea.getDescription())
+                    .price(new DecimalFormat("###,###,###,###").format(idea.getPrice()) + "￦")
+                    .status(idea.getStatus())
+                    .createdAt(idea.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH")) + "h")
+                    .files(idea.getFiles())
+                    .build();
 
             ideaLDtos.add(ideaLDto);
         }
