@@ -17,7 +17,7 @@ import java.util.List;
 public interface IdeaService {
 
     // GET
-    ResponseEntity<Idea> getIdeaById(Long id);
+    ResponseEntity<IdeaLDto> getIdeaById(Long id);
 
     ResponseEntity<List<IdeaLDto>> getIdeaAll();
 

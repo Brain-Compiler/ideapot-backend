@@ -40,11 +40,21 @@ public class IdeaServiceImpl implements IdeaService {
     private final FilesService filesService;
 
     @Override
-    public ResponseEntity<Idea> getIdeaById(Long id) {
+    public ResponseEntity<IdeaLDto> getIdeaById(Long id) {
         Optional<Idea> idea = ideaRepository.findById(id);
 
         if (idea.isPresent()) {
-            return new ResponseEntity<>(idea.get(), HttpStatus.OK);
+            IdeaLDto ideaLDto = IdeaLDto.builder()
+                    .id(idea.get().getId())
+                    .user(idea.get().getUser())
+                    .title(idea.get().getTitle())
+                    .description(idea.get().getDescription())
+                    .price(new DecimalFormat("###,###,###,###").format(idea.get().getPrice()) + "￦")
+                    .status(idea.get().getStatus())
+                    .createdAt(idea.get().getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH")) + "h")
+                    .files(idea.get().getFiles())
+                    .build();
+            return new ResponseEntity<>(ideaLDto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

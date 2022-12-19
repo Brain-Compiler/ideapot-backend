@@ -25,7 +25,7 @@ public class IdeaController {
 
     // GET
     @GetMapping("/{id}")
-    public ResponseEntity<Idea> getIdeaById(@PathVariable Long id) {
+    public ResponseEntity<IdeaLDto> getIdeaById(@PathVariable Long id) {
         return ideaService.getIdeaById(id);
     }
 
