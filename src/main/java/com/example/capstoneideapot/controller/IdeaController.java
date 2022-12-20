@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("/api/idea")
 public class IdeaController {
 
-    private final IdeaService ideaService ;
+    private final IdeaService ideaService;
 
     // GET
     @GetMapping("/{id}")
@@ -36,15 +36,13 @@ public class IdeaController {
 
     // POST
     @PostMapping
-    public ResponseEntity<Idea> createIdea(@RequestPart IdeaDto ideaDto,
-                               @RequestPart(required = false) List<MultipartFile> files) throws IOException {
+    public ResponseEntity<Idea> createIdea(@RequestPart IdeaDto ideaDto, @RequestPart(required = false) List<MultipartFile> files) throws IOException {
         return ideaService.createIdea(ideaDto, files);
     }
 
     // PUT
     @PutMapping  // this method should contain id
-    public ResponseEntity<HttpStatus> editIdea(@RequestPart IdeaDto ideaDto,
-                             @RequestPart(required = false) List<MultipartFile> files) throws  IOException {
+    public ResponseEntity<HttpStatus> editIdea(@RequestPart IdeaDto ideaDto, @RequestPart(required = false) List<MultipartFile> files) throws IOException {
         return ideaService.editIdea(ideaDto, files);
     }
 

@@ -68,18 +68,8 @@ public class UserController {
         return userService.findPasswordCertificationEmail(username);
     }
 
-    @Operation(summary = "회원가입 메소드", description = "회원가입 메서드입니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = User.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
-    })
-    @Parameters({
-
-    })
     @PostMapping("/sign-up")  // 회원가입
-    public ResponseEntity<?> signUp(@RequestPart SignUpDto signUpDto,
-                                    @RequestPart(required = false) MultipartFile profile) throws IOException {
+    public ResponseEntity<?> signUp(@RequestPart SignUpDto signUpDto, @RequestPart(required = false) MultipartFile profile) throws IOException {
         return userService.checkSignUp(signUpDto, profile);
     }
 

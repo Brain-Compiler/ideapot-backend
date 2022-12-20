@@ -31,6 +31,6 @@ public class IdeaLDto {
 
     private String editAt;
 
-    private Set<File> files = new HashSet<>();
+    private Set<File> files;
 
 }
