@@ -140,7 +140,7 @@ public class FilesServiceImpl implements FilesService {
     @Override
     public void addIdeaToFiles(Idea idea, Set<File> files) {
         if (idea.getFiles() == null) {
-            idea.setFiles(files);
+            idea.setFiles((List<File>) files);
         } else {
             idea.getFiles().addAll(files);
         }

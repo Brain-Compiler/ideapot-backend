@@ -5,7 +5,9 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -47,6 +49,6 @@ public class Idea {
     private LocalDateTime editAt;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    private Set<File> files = new HashSet<>();
+    private List<File> files = new ArrayList<>();
 
 }

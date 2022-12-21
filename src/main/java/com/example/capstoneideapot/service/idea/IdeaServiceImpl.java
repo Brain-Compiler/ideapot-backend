@@ -13,6 +13,7 @@ import com.example.capstoneideapot.repository.UserRepository;
 import com.example.capstoneideapot.service.files.FilesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -62,6 +60,20 @@ public class IdeaServiceImpl implements IdeaService {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
+        Comparator<File> cp = new Comparator<File>() {
+            @Override
+            public int compare(File data1, File data2) {
+                Long dataId1 = data1.getId();
+                Long dataId2 = data2.getId();
+
+                if (dataId1 > dataId2) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        };
+
         for (Idea idea : ideaList) {
             IdeaLDto ideaLDto = IdeaLDto.builder()
                     .id(idea.getId())
@@ -71,11 +83,16 @@ public class IdeaServiceImpl implements IdeaService {
                     .price(new DecimalFormat("###,###,###,###").format(idea.getPrice()) + "￦")
                     .status(idea.getStatus())
                     .createdAt(idea.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH")) + "h")
-                    .files(idea.getFiles())
                     .build();
+
+            List<File> ideaFiles = idea.getFiles();
+            Collections.sort(ideaFiles, cp);
+
+            ideaLDto.setFiles(ideaFiles);
 
             ideaLDtos.add(ideaLDto);
         }
+
         return new ResponseEntity<>(ideaLDtos, HttpStatus.OK);
     }
 
@@ -134,7 +151,7 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Override
     public ResponseEntity<HttpStatus> deleteIdeaFiles(Idea idea) {
-        Set<File> ideaFiles = idea.getFiles();
+        List<File> ideaFiles = idea.getFiles();
 
         idea.setFiles(null);
 

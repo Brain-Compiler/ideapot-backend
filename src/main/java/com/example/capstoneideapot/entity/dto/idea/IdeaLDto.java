@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -31,6 +32,6 @@ public class IdeaLDto {
 
     private String editAt;
 
-    private Set<File> files;
+    private List<File> files;
 
 }
