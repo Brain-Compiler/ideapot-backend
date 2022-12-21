@@ -1,11 +1,12 @@
 package com.example.capstoneideapot.service.idea;
 
+import com.example.capstoneideapot.entity.Category;
 import com.example.capstoneideapot.entity.File;
 import com.example.capstoneideapot.entity.Idea;
 import com.example.capstoneideapot.entity.User;
-import com.example.capstoneideapot.entity.dto.ErrorDto;
 import com.example.capstoneideapot.entity.dto.idea.IdeaDto;
 import com.example.capstoneideapot.entity.dto.idea.IdeaLDto;
+import com.example.capstoneideapot.repository.CategoryRepository;
 import com.example.capstoneideapot.repository.FilesRepository;
 import com.example.capstoneideapot.repository.IdeaRepository;
 import com.example.capstoneideapot.repository.UserRepository;
@@ -17,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -38,6 +38,8 @@ public class IdeaServiceImpl implements IdeaService {
     private final FilesRepository filesRepository;
 
     private final FilesService filesService;
+
+    private final CategoryRepository categoryRepository;
 
     @Override
     public ResponseEntity<IdeaLDto> getIdeaById(Long id) {
@@ -160,13 +162,25 @@ public class IdeaServiceImpl implements IdeaService {
         Long userId = ideaDto.getUserId();
         User user = userRepository.findById(userId).orElse(null);
 
-        Idea idea = new Idea();
-        idea.setUser(user);
-        idea.setTitle(ideaDto.getTitle());
-        idea.setDescription(ideaDto.getDescription());
-        idea.setPrice(ideaDto.getPrice());
-        idea.setStatus(0);
-        idea.setCreatedAt(LocalDateTime.now());
+        log.info("category1: " + ideaDto.getCategory1());
+        log.info("category2: " + ideaDto.getCategory2());
+        log.info("category3: " + ideaDto.getCategory3());
+
+
+//        if (ideaDto.getCategory1())
+//
+//        String tag = ideaDto.getCategory1() + "/" + ideaDto.getCategory2() + "/" + ideaDto.getCategory3();
+//        Category category = categoryRepository.findByTagContains(tag);
+
+        Idea idea = Idea.builder()
+                .user(user)
+                .title(ideaDto.getTitle())
+                .description(ideaDto.getDescription())
+                .price(ideaDto.getPrice())
+                .status(0)
+                .createdAt(LocalDateTime.now())
+                .build();
+
         return idea;
     }
 
