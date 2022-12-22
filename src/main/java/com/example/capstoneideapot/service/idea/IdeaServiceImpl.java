@@ -40,6 +40,43 @@ public class IdeaServiceImpl implements IdeaService {
     private final CategoryRepository categoryRepository;
 
     @Override
+    public ResponseEntity<Map<String, Map<String, String>>> getCategoryList() {
+        try {
+            List<Category> categories = categoryRepository.findAll();
+            Map<String, Map<String, String>> categoryList = new LinkedHashMap<>();
+            Map<String, String> tagList = new LinkedHashMap<>();
+
+            int tagCount = 1;
+            String categoryName = "";
+
+            for (int i = 0; i < categories.size(); i++) {
+                Category category = categories.get(i);
+                String[] tags = category.getTag().split("/");
+
+                if (!categoryName.equals(tags[0])) {
+                    categoryName = tags[0];
+                    if (!categoryName.equals(categoryName)) {
+                        categoryList.put(categoryName, tagList);
+                        tagCount = 1;
+                    }
+                    categoryList.put(categoryName, null);
+                } else {
+                    if (tags.length == 3) {
+                        tagList.put(tags[1] + "/" + tagCount, tags[2]);
+                        tagCount++;
+                    }
+                }
+            }
+            categoryList.put(categoryName, tagList);
+
+            return new ResponseEntity<>(categoryList, HttpStatus.OK);
+        } catch (Exception exception) {
+            log.info("error: {}", exception.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
     public ResponseEntity<IdeaLDto> getIdeaById(Long id) {
         Optional<Idea> idea = ideaRepository.findById(id);
 
@@ -178,22 +215,24 @@ public class IdeaServiceImpl implements IdeaService {
     public Idea createIdeaEntity(IdeaDto ideaDto) {
         Long userId = ideaDto.getUserId();
         User user = userRepository.findById(userId).orElse(null);
+        String tag = ideaDto.getCategory1();
 
-        log.info("category1: " + ideaDto.getCategory1());
-        log.info("category2: " + ideaDto.getCategory2());
-        log.info("category3: " + ideaDto.getCategory3());
+        if (ideaDto.getCategory2() != null) {
+            tag += "/" + ideaDto.getCategory2();
+        }
 
+        if (ideaDto.getCategory2() != null && ideaDto.getCategory3() != null) {
+            tag += "/" + ideaDto.getCategory3();
+        }
 
-//        if (ideaDto.getCategory1())
-//
-//        String tag = ideaDto.getCategory1() + "/" + ideaDto.getCategory2() + "/" + ideaDto.getCategory3();
-//        Category category = categoryRepository.findByTagContains(tag);
+        Category category = categoryRepository.findByTagContains(tag);
 
         Idea idea = Idea.builder()
                 .user(user)
                 .title(ideaDto.getTitle())
                 .description(ideaDto.getDescription())
                 .price(ideaDto.getPrice())
+                .category(category)
                 .status(0)
                 .createdAt(LocalDateTime.now())
                 .build();

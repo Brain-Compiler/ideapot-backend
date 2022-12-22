@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -24,6 +25,11 @@ public class IdeaController {
     private final IdeaService ideaService;
 
     // GET
+    @GetMapping("/category")
+    public ResponseEntity<Map<String, Map<String, String>>> getCategoryList() {
+        return ideaService.getCategoryList();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<IdeaLDto> getIdeaById(@PathVariable Long id) {
         return ideaService.getIdeaById(id);

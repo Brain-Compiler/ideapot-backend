@@ -65,7 +65,7 @@ public class FilesServiceImpl implements FilesService {
         if (files != null) {
             if (!files.get(0).getOriginalFilename().equals("")) {
                 String ideaPath = path + "\\idea";
-                Set<File> fileEntitySet = new HashSet<>();
+                List<File> fileEntitySet = new ArrayList<>();
 
                 for (MultipartFile file : files) {
                     File fileEntity = new File("idea", saveFileAndReturnFileName(ideaPath, file));
@@ -138,9 +138,9 @@ public class FilesServiceImpl implements FilesService {
     }
 
     @Override
-    public void addIdeaToFiles(Idea idea, Set<File> files) {
+    public void addIdeaToFiles(Idea idea, List<File> files) {
         if (idea.getFiles() == null) {
-            idea.setFiles((List<File>) files);
+            idea.setFiles(files);
         } else {
             idea.getFiles().addAll(files);
         }

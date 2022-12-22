@@ -31,6 +31,6 @@ public interface FilesService {
     // ELSE
     String saveFileAndReturnFileName(String path, MultipartFile file) throws IOException;
 
-    void addIdeaToFiles(Idea idea, Set<File> files);
+    void addIdeaToFiles(Idea idea, List<File> files);
 
 }
