@@ -40,39 +40,38 @@ public class IdeaServiceImpl implements IdeaService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public ResponseEntity<Map<String, Map<String, String>>> getCategoryList() {
+    public ResponseEntity<Map<Long, String>> getCategoryList() {
         try {
-            List<Category> categories = categoryRepository.findAll();
-            Map<String, Map<String, String>> categoryList = new LinkedHashMap<>();
-            Map<String, String> tagList = new LinkedHashMap<>();
+            Map<Long, String> categoryList = new LinkedHashMap<>();
+            List<Category> allCategory = categoryRepository.findAll();
 
-            int tagCount = 1;
-            String categoryName = "";
-
-            for (int i = 0; i < categories.size(); i++) {
-                Category category = categories.get(i);
-                String[] tags = category.getTag().split("/");
-
-                if (!categoryName.equals(tags[0])) {
-                    categoryName = tags[0];
-                    if (!categoryName.equals(categoryName)) {
-                        categoryList.put(categoryName, tagList);
-                        tagCount = 1;
-                    }
-                    categoryList.put(categoryName, null);
-                } else {
-                    if (tags.length == 3) {
-                        tagList.put(tags[1] + "/" + tagCount, tags[2]);
-                        tagCount++;
-                    }
-                }
+            for (Category category : allCategory) {
+                String[] categoryName = category.getTag().split("/");
+                categoryList.put(category.getId(), categoryName[1]);
             }
-            categoryList.put(categoryName, tagList);
-
             return new ResponseEntity<>(categoryList, HttpStatus.OK);
         } catch (Exception exception) {
             log.info("error: {}", exception.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @Override
+    public ResponseEntity<List<Idea>> getIdeaByCategory(Long id) {
+        Optional<Category> category = categoryRepository.findById(id);
+        log.info("category: {}", category.get().toString());
+
+        if (category.isPresent()) {
+            List<Idea> ideaList = ideaRepository.findAllByCategory(category.get());
+
+            if (!ideaList.isEmpty()) {
+                return new ResponseEntity<>(ideaList, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -81,7 +80,7 @@ public class IdeaServiceImpl implements IdeaService {
         Optional<Idea> idea = ideaRepository.findById(id);
 
         if (idea.isPresent()) {
-            IdeaLDto ideaLDto = IdeaLDto.builder().id(idea.get().getId()).user(idea.get().getUser()).title(idea.get().getTitle()).description(idea.get().getDescription()).price(new DecimalFormat("###,###,###,###").format(idea.get().getPrice()) + "￦").status(idea.get().getStatus()).createdAt(idea.get().getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH")) + "h").files(idea.get().getFiles()).build();
+            IdeaLDto ideaLDto = IdeaLDto.builder().id(idea.get().getId()).user(idea.get().getUser()).title(idea.get().getTitle()).category(idea.get().getCategory()).description(idea.get().getDescription()).price(new DecimalFormat("###,###,###,###").format(idea.get().getPrice()) + "￦").status(idea.get().getStatus()).createdAt(idea.get().getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH")) + "h").files(idea.get().getFiles()).build();
             return new ResponseEntity<>(ideaLDto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -117,6 +116,7 @@ public class IdeaServiceImpl implements IdeaService {
                     .user(idea.getUser())
                     .title(idea.getTitle())
                     .description(idea.getDescription())
+                    .category(idea.getCategory())
                     .price(new DecimalFormat("###,###,###,###").format(idea.getPrice()) + "￦")
                     .status(idea.getStatus())
                     .createdAt(idea.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH")) + "h")
