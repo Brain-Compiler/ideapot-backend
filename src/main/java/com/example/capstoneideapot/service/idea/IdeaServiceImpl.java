@@ -40,14 +40,14 @@ public class IdeaServiceImpl implements IdeaService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public ResponseEntity<Map<Long, String>> getCategoryList() {
+    public ResponseEntity<List<Map<Long, String>>> getCategoryList() {
         try {
-            Map<Long, String> categoryList = new LinkedHashMap<>();
+            List<Map<Long, String>> categoryList = new ArrayList<>();
             List<Category> allCategory = categoryRepository.findAll();
 
             for (Category category : allCategory) {
                 String[] categoryName = category.getTag().split("/");
-                categoryList.put(category.getId(), categoryName[1]);
+                categoryList.add(Map.of(category.getId(), categoryName[1]));
             }
             return new ResponseEntity<>(categoryList, HttpStatus.OK);
         } catch (Exception exception) {

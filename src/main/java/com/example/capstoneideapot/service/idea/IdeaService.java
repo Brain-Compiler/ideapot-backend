@@ -18,7 +18,7 @@ import java.util.Map;
 public interface IdeaService {
 
     // GET
-    ResponseEntity<Map<Long, String>> getCategoryList();
+    ResponseEntity<List<Map<Long, String>>> getCategoryList();
 
     ResponseEntity<List<Idea>> getIdeaByCategory(Long id);
 

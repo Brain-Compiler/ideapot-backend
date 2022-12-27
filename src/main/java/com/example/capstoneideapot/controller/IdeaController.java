@@ -26,7 +26,7 @@ public class IdeaController {
 
     // GET
     @GetMapping("/category")
-    public ResponseEntity<Map<Long, String>> getCategoryList() {
+    public ResponseEntity<List<Map<Long, String>>> getCategoryList() {
         return ideaService.getCategoryList();
     }
 
