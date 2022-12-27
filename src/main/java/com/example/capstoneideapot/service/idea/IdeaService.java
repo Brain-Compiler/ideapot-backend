@@ -20,7 +20,7 @@ public interface IdeaService {
     // GET
     ResponseEntity<List<Map<Long, String>>> getCategoryList();
 
-    ResponseEntity<List<Idea>> getIdeaByCategory(Long id);
+    ResponseEntity<List<IdeaLDto>> getIdeaByCategory(Long id);
 
     ResponseEntity<IdeaLDto> getIdeaById(Long id);
 
@@ -41,5 +41,7 @@ public interface IdeaService {
     Idea createIdeaEntity(IdeaDto ideaDto);
 
     void setIdeaDtoToIdea(Idea idea, IdeaDto ideaDto);
+
+    List<IdeaLDto> setIdeaToIdeaDto(List<Idea> ideaList);
 
 }

@@ -58,15 +58,15 @@ public class IdeaServiceImpl implements IdeaService {
 
 
     @Override
-    public ResponseEntity<List<Idea>> getIdeaByCategory(Long id) {
+    public ResponseEntity<List<IdeaLDto>> getIdeaByCategory(Long id) {
         Optional<Category> category = categoryRepository.findById(id);
-        log.info("category: {}", category.get().toString());
 
         if (category.isPresent()) {
             List<Idea> ideaList = ideaRepository.findAllByCategory(category.get());
 
+            List<IdeaLDto> ideaLDtos = setIdeaToIdeaDto(ideaList);
             if (!ideaList.isEmpty()) {
-                return new ResponseEntity<>(ideaList, HttpStatus.OK);
+                return new ResponseEntity<>(ideaLDtos, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -90,45 +90,11 @@ public class IdeaServiceImpl implements IdeaService {
     @Override
     public ResponseEntity<List<IdeaLDto>> getIdeaAll() {
         List<Idea> ideaList = ideaRepository.findAll();
-        List<IdeaLDto> ideaLDtos = new ArrayList<>();
 
         if (ideaList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-
-        Comparator<File> cp = new Comparator<File>() {
-            @Override
-            public int compare(File data1, File data2) {
-                Long dataId1 = data1.getId();
-                Long dataId2 = data2.getId();
-
-                if (dataId1 > dataId2) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            }
-        };
-
-        for (Idea idea : ideaList) {
-            IdeaLDto ideaLDto = IdeaLDto.builder()
-                    .id(idea.getId())
-                    .user(idea.getUser())
-                    .title(idea.getTitle())
-                    .description(idea.getDescription())
-                    .category(idea.getCategory())
-                    .price(new DecimalFormat("###,###,###,###").format(idea.getPrice()) + "￦")
-                    .status(idea.getStatus())
-                    .createdAt(idea.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH")) + "h")
-                    .build();
-
-            List<File> ideaFiles = idea.getFiles();
-            Collections.sort(ideaFiles, cp);
-
-            ideaLDto.setFiles(ideaFiles);
-
-            ideaLDtos.add(ideaLDto);
-        }
+        List<IdeaLDto> ideaLDtos = setIdeaToIdeaDto(ideaList);
 
         return new ResponseEntity<>(ideaLDtos, HttpStatus.OK);
     }
@@ -248,4 +214,43 @@ public class IdeaServiceImpl implements IdeaService {
         idea.setEditAt(LocalDateTime.now());
     }
 
+    @Override
+    public List<IdeaLDto> setIdeaToIdeaDto(List<Idea> ideaList) {
+        List<IdeaLDto> ideaLDtos = new ArrayList<>();
+
+        Comparator<File> cp = new Comparator<File>() {
+            @Override
+            public int compare(File data1, File data2) {
+                Long dataId1 = data1.getId();
+                Long dataId2 = data2.getId();
+
+                if (dataId1 > dataId2) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        };
+
+        for (Idea idea : ideaList) {
+            IdeaLDto ideaLDto = IdeaLDto.builder()
+                    .id(idea.getId())
+                    .user(idea.getUser())
+                    .title(idea.getTitle())
+                    .description(idea.getDescription())
+                    .category(idea.getCategory())
+                    .price(new DecimalFormat("###,###,###,###").format(idea.getPrice()) + "￦")
+                    .status(idea.getStatus())
+                    .createdAt(idea.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH")) + "h")
+                    .build();
+
+            List<File> ideaFiles = idea.getFiles();
+            Collections.sort(ideaFiles, cp);
+
+            ideaLDto.setFiles(ideaFiles);
+
+            ideaLDtos.add(ideaLDto);
+        }
+        return ideaLDtos;
+    }
 }
