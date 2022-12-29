@@ -80,7 +80,16 @@ public class IdeaServiceImpl implements IdeaService {
         Optional<Idea> idea = ideaRepository.findById(id);
 
         if (idea.isPresent()) {
-            IdeaLDto ideaLDto = IdeaLDto.builder().id(idea.get().getId()).user(idea.get().getUser()).title(idea.get().getTitle()).category(idea.get().getCategory()).description(idea.get().getDescription()).price(new DecimalFormat("###,###,###,###").format(idea.get().getPrice()) + "￦").status(idea.get().getStatus()).createdAt(idea.get().getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH")) + "h").files(idea.get().getFiles()).build();
+            IdeaLDto ideaLDto = IdeaLDto.builder()
+                    .id(idea.get().getId())
+                    .user(idea.get().getUser())
+                    .title(idea.get().getTitle())
+                    .category(idea.get().getCategory())
+                    .description(idea.get().getDescription())
+                    .price(new DecimalFormat("###,###,###,###").format(idea.get().getPrice()) + "￦")
+                    .status(idea.get().getStatus())
+                    .createdAt(idea.get().getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH")) + "h")
+                    .files(idea.get().getFiles()).build();
             return new ResponseEntity<>(ideaLDto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -181,15 +190,18 @@ public class IdeaServiceImpl implements IdeaService {
     public Idea createIdeaEntity(IdeaDto ideaDto) {
         Long userId = ideaDto.getUserId();
         User user = userRepository.findById(userId).orElse(null);
-        String tag = ideaDto.getCategory1();
 
-        if (ideaDto.getCategory2() != null) {
-            tag += "/" + ideaDto.getCategory2();
-        }
+        String tag = ideaDto.getCategory2();
 
-        if (ideaDto.getCategory2() != null && ideaDto.getCategory3() != null) {
-            tag += "/" + ideaDto.getCategory3();
-        }
+//        String tag = ideaDto.getCategory1();
+//
+//        if (ideaDto.getCategory2() != null) {
+//            tag += "/" + ideaDto.getCategory2();
+//        }
+//
+//        if (ideaDto.getCategory2() != null && ideaDto.getCategory3() != null) {
+//            tag += "/" + ideaDto.getCategory3();
+//        }
 
         Category category = categoryRepository.findByTagContains(tag);
 
